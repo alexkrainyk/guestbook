@@ -1,0 +1,55 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Feedback list{% endblock %}
+{% block body %}
+    <div class="row">
+        <div class="col-12">
+            <h3>Feedback list</h3>
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Add feedback</h5>
+                    {{ form_start(form) }}
+                    {{ form_row(form.text) }}
+                    {{ form_rest(form) }}
+                    <div class="form-group">
+                        <button type="submit" class="btn btn-success">Add</button>
+                    </div>
+                    {{ form_end(form) }}
+                </div>
+            </div>
+        </div>
+        <div class="col-12">
+            <table class="table table-hover">
+                <thead>
+                <tr>
+                    <th>Created</th>
+                    <th>Author</th>
+                    <th>Message</th>
+                    <th>Actions</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for feedback in feedbacks %}
+                    <tr>
+                        <td>{{ feedback.created|date('M d, H:i:s') }}</td>
+                        <td>{{ feedback.author }}</td>
+                        <td>{{ feedback.text }}</td>
+                        <td>
+                            {% if has_access('EDIT', feedback) %}
+                                <a href="{{ path('edit_feedback', {'id': feedback.id}) }}">Edit</a>
+                            {% endif %}
+                            {% if has_access('DELETE', feedback) %}
+                                <a href="{{ path('delete_feedback', {'id': feedback.id}) }}">Delete</a>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% else %}
+                    <tr>
+                        <td colspan="3">No feedback found</td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+{% endblock %}
